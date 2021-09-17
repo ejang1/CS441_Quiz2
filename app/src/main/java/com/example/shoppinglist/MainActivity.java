@@ -1,6 +1,8 @@
 package com.example.shoppinglist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,19 +17,29 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     boolean add = false;
-    LinearLayout shoppinglist;
+    RecyclerView shoppingList;
     EditText mEditText;
     Button button;
+    ArrayList<ShoppingItem> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText editText = (EditText) findViewById(R.id.shoppingListInputBox);
+        shoppingList = (RecyclerView) findViewById(R.id.shoppinglist);
+        items = new ArrayList<ShoppingItem>();
+        ShoppingAdapter shoppingAdapter = new ShoppingAdapter(items);
+
+        shoppingList.setAdapter(shoppingAdapter);
+        shoppingList.setLayoutManager(new LinearLayoutManager(this));
+
+        EditText editText = (EditText) findViewById(R.id.itemInput);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -38,27 +50,15 @@ public class MainActivity extends AppCompatActivity {
                     changeField(v.getText());
                     handled = true;
                 }
+                v.setText("");
                 return handled;
             }
         });
     }
     public void changeField(CharSequence item){
-        TextView temp1 = (TextView)findViewById(R.id.textView);
-        temp1.setText(item);
+        items.add(new ShoppingItem(item.toString()));
     }
 
-    public void addItem(View view){
-//        Button button = (Button)findViewById(R.id.addNew);
-//        if(add){
-//            add = false;
-//            button.setBackgroundColor(0xFFA8E6CF);
-//        }
-//        else{
-//            add = true;
-//            button.setBackgroundColor(0xFFFFD3B6);
-//        }
-        //adding a new textview in the linear layout
 
-    }
 
 }
