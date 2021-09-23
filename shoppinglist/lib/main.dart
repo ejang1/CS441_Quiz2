@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_dialogs/material_dialogs.dart';
+import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 
 void main() {
   runApp(MyApp());
@@ -103,6 +105,19 @@ class _myScaffoldState extends State<myScaffold> {
                               else{
                                 buy[index] = true;
                                 jobDone ++;
+                              }
+                              //if all items are checked pop up animation effect
+                              if(jobDone == items.length && jobDone != 0){
+                                Dialogs.materialDialog(
+                                      color: Colors.white,
+                                      msg: "You Complete Shopping!",
+                                        title: "Congratulation",
+                                        lottieBuilder: Lottie.asset(
+                                            'assets/47543-congratulation.json',
+                                          fit: BoxFit.contain,
+                                        ),
+                                        context: context,
+                                    );
                               }
                             });
                           },
