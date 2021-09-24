@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+//import for dialog
 import 'package:material_dialogs/material_dialogs.dart';
-import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 
 void main() {
   runApp(MyApp());
@@ -47,113 +48,120 @@ class myScaffold extends StatefulWidget {
 }
 
 class _myScaffoldState extends State<myScaffold> {
-
   int jobDone = 0;
-  List<String> items = ["temp1","temp2","temp3"];
-  List<bool> buy = [false,false,false];
+  List<String> items = ["item 1", "item 2", "item 3"];
+  List<bool> buy = [false, false, false];
   String iteminput = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            Text(
-              'Shopping Done :: '
-            ),
+            Text('Shopping Done :: '),
             SizedBox(
               width: 30,
             ),
-            Text(
-              '${jobDone}'
-            ),
+            Text('${jobDone}'),
           ],
         ),
       ),
       body: Column(
+        // shopping list view and textinput
+        // Must seperated by Column to prevent the textfield go out from screen
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          //Flexible height to strech the size of container when new item added
           Flexible(
             child: Container(
+              //ListView from items[]
               child: ListView.builder(
-                //reverse: true,
+                  //reverse: true,
                   shrinkWrap: true,
                   itemCount: items.length,
-                  itemBuilder: (context,index){
+                  itemBuilder: (context, index) {
                     final item = items[index];
                     return Dismissible(
                         key: UniqueKey(),
-                        onDismissed: (direction){
+                        //Delete specific item through swipe
+                        onDismissed: (direction) {
                           setState(() {
-                            if(buy[index] == true) jobDone --;
+                            //If deleted item was done, complete count go down
+                            if (buy[index] == true) jobDone--;
                             items.removeAt(index);
                             buy.removeAt(index);
                           });
                         },
-                        background: Container(color: Colors.blueGrey,),
+                        background: Container(
+                          color: Colors.blueGrey,
+                        ),
                         child: ListTile(
                           title: Text(
                             item,
                           ),
-                          tileColor: buy[index]? Colors.green.shade300: Colors.redAccent.shade100,
-                          onTap: (){
+                          //Green means shopped, Red mean not shopped
+                          tileColor: buy[index]
+                              ? Colors.green.shade300
+                              : Colors.redAccent.shade100,
+                          onTap: () {
                             setState(() {
-                              if(buy[index]){
+                              if (buy[index]) {
                                 buy[index] = false;
                                 jobDone--;
-                              }
-                              else{
+                              } else {
                                 buy[index] = true;
-                                jobDone ++;
+                                jobDone++;
                               }
                               //if all items are checked pop up animation effect
-                              if(jobDone == items.length && jobDone != 0){
+                              if (jobDone == items.length && jobDone != 0) {
                                 Dialogs.materialDialog(
-                                      color: Colors.white,
-                                      msg: "You Complete Shopping!",
-                                        title: "Congratulation",
-                                        lottieBuilder: Lottie.asset(
-                                            'assets/47543-congratulation.json',
-                                          fit: BoxFit.contain,
-                                        ),
-                                        context: context,
-                                    );
+                                  color: Colors.white,
+                                  msg: "You Complete Shopping!",
+                                  title: "Congratulation",
+                                  lottieBuilder: Lottie.asset(
+                                    'assets/47543-congratulation.json',
+                                    fit: BoxFit.contain,
+                                  ),
+                                  context: context,
+                                );
                               }
                             });
                           },
                         ));
-                  }
-              ),
+                  }),
             ),
           ),
+          //container for textfield and button
           Container(
             height: 100,
             color: Colors.black87,
             child: Column(
               children: [
                 TextButton(
-                    onPressed: (){
-                      setState(() {
+                  onPressed: () {
+                    setState(() {
+                      if (iteminput != "") {
                         items.add(iteminput);
                         buy.add(false);
-                      });
-                    },
-                    child: Text(
-                        'Add ITEM!',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                        iteminput = "";
+                      }
+                    });
+                  },
+                  child: Text(
+                    'Add ITEM!',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
-                ),
-
-                TextField(
-                  style: TextStyle(
-                    color: Colors.white,
                   ),
-                    onChanged: (input){
-                      iteminput = input;
-                    }
                 ),
+                TextField(
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    onChanged: (input) {
+                      iteminput = input;
+                    }),
               ],
             ),
           ),
@@ -162,4 +170,3 @@ class _myScaffoldState extends State<myScaffold> {
     );
   }
 }
-
